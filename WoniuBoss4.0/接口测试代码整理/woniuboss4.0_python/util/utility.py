@@ -40,7 +40,7 @@ class Utility:
     @classmethod
     def get_json(cls, path):
         import json
-        with open(path) as file:
+        with open(path,encoding='utf-8') as file:
             contents = json.load(file)
         return contents
 
