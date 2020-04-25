@@ -1,6 +1,6 @@
 import unittest
 
-from woniuboss25.util.utility import Utility
+from util.utility import Utility
 
 
 class Driven:

@@ -1,11 +1,11 @@
 from util.service import Service
 
 
-class ReportMarketBank:
+class AdminManage:
 
     def __init__(self):
         self.session = Service.get_session()
 
-    def query_all(self,url,data):
+    def query(self,url,data):
         return  self.session.post(url,data)
 
