@@ -6,6 +6,6 @@ class AdminManage:
     def __init__(self):
         self.session = Service.get_session()
 
-    def query(self,url,data):
+    def admin_manage(self,url,data):
         return  self.session.post(url,data)
 
