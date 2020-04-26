@@ -1,0 +1,9 @@
+1.提交前建议先git pull
+2.git commit 一定要添加备注
+3.建立忽略文件
+如果之前已经被跟踪了
+执行如下指令 (需要安装ignore插件)
+git rm -r --cached .
+git add .
+git commit -m "update gitignore"
+

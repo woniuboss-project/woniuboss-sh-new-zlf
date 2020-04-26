@@ -53,9 +53,17 @@ class Service:
 		cls.open_page(driver, base_config_path)
 		# 通过字典方式传递cookie信息
 		contents = Utility.get_json(base_config_path)
-		driver.add_cookie({'name': 'username', 'value': contents['username']})
-		driver.add_cookie({'name': 'password', 'value': contents['password']})
-		cls.open_page(driver, base_config_path)
+		# driver.add_cookie({'name': 'username', 'value': contents['username']})
+		# driver.add_cookie({'name': 'password', 'value': contents['password']})
+		ele1 = driver.find_element_by_name('userName')
+		ele2 = driver.find_element_by_name('userPass')
+		ele3 = driver.find_element_by_name('checkcode')
+		ele1.send_keys('WNCD000')
+		ele2.send_keys('woniu123')
+		ele3.send_keys('0000')
+		driver.find_element_by_css_selector('.btn').click()
+		# cls.open_page(driver, base_config_path)
+
 		# 打开页面的方法
 		# 既依赖于应用，也依赖于webdriver
 	@classmethod

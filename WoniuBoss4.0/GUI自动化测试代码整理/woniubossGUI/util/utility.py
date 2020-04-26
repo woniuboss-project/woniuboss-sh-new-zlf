@@ -137,7 +137,8 @@ class Utility:
 			d = {}
 			for t in temp:
 				# 给字典添加内容：dict[key] = value
-				d[t.split('=')[0]] = t.split('=')[1]
+				if t != '':
+					d[t.split('=')[0]] = t.split('=')[1]
 			d['expect'] = expect
 			test_info.append(d)
 		# 将结果返回
