@@ -40,7 +40,7 @@ class Utility:
     @classmethod
     def get_json(cls, path):
         import json
-        with open(path,encoding='utf-8') as file:
+        with open(path) as file:
             contents = json.load(file)
         return contents
 
@@ -145,9 +145,34 @@ class Utility:
             li.append(tup)
         return li
 
+    @classmethod
+    def get_excel_data(cls,xls_file_info):
+        workbook = xlrd.open_workbook(xls_file_info['DATAPATH'])
+        contents = workbook.sheet_by_name(xls_file_info['SHEETNAME'])
+        test_info = []
+        # 按行读取每一条测试信息
+        for i in range(xls_file_info['STARTROW'], xls_file_info['ENDROW']):
+            # 读取单元格中的内容
+            url = contents.cell(i, xls_file_info['URLCOL']).value
+            method = contents.cell(i, xls_file_info['METHODCOL']).value
+            data = contents.cell(i, xls_file_info['DATACOL']).value
+            status_code = contents.cell(i, xls_file_info['CODECOL']).value
+            resp_content = contents.cell(i, xls_file_info['CONTENTCOL']).value
+            info = {'URL': url, 'METHOD': method, 'DATA': data, 'CODE': int(status_code), 'CONTENT': resp_content}
+            test_info.append(info)
+        return test_info
 
-if __name__ == '__main__':
-    info = Utility.get_json('../config/testdata.conf')
-    result = Utility.get_excel_to_dict(info[0])
-    for r in result:
-        print(r)
+    @classmethod
+    def get_excel_data_to_tuple(cls, xls_file_info):
+        result = cls.get_excel_data(xls_file_info)
+        li = []
+        for di in result:
+            # 通过tuple(dict.vlues())将值集转化为元组
+            tup = tuple(di.values())
+            li.append(tup)
+        return li
+
+
+
+
+
