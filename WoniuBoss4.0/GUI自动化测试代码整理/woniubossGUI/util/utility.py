@@ -156,3 +156,7 @@ class Utility:
 			li.append(tup)
 		return li
 
+if __name__ == '__main__':
+	test_config_info = Utility.get_json('..\\config\\cxx_testdata.conf')
+	#print(test_config_info)
+	print(Utility.get_excel_to_tuple(test_config_info[1]))
