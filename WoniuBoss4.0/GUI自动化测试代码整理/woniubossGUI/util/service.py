@@ -5,6 +5,9 @@
 # Author:       Administrator
 # Date:         2020/2/11
 #-------------------------------------------------------------------------------
+import time
+
+from selenium.webdriver.support.select import Select
 
 from util.utility import Utility
 
@@ -40,14 +43,24 @@ class Service:
 		random_index = random.randint(0, seleter_length - 1)
 		Select(selecter).select_by_index(random_index)
 
+	@classmethod
+	def select_by_text(cls,selecter,text_info):
+		Select(selecter).select_by_visible_text(text_info)
+
+
 	# 去掉某个元素的只读属性（id）
 	# 依赖于webdriver
 	@classmethod
 	def remove_readonly(cls, driver, ele_id):
 		driver.execute_script('document.getElementById("%s").readOnly=false' % (ele_id))
 
+	@classmethod
+	def remove_readonly_name(cls, driver, ele):
+		driver.execute_script('document.getElementsByTagName("%s")[0].readOnly=false'%(ele))
+
 	# 具体的业务功能需要绕过登录，使用cookie
 	# 与应用强相关（woniusales_test01），还依赖于webdriver
+
 	@classmethod
 	def miss_login(cls, driver, base_config_path):
 		cls.open_page(driver, base_config_path)
@@ -58,11 +71,27 @@ class Service:
 		ele1 = driver.find_element_by_name('userName')
 		ele2 = driver.find_element_by_name('userPass')
 		ele3 = driver.find_element_by_name('checkcode')
-		ele1.send_keys('WNCD000')
+		ele1.send_keys('WNCD016')
 		ele2.send_keys('woniu123')
 		ele3.send_keys('0000')
 		driver.find_element_by_css_selector('.btn').click()
 		# cls.open_page(driver, base_config_path)
+
+	# 具体的业务功能需要绕过登录，使用cookie
+	"""
+	@classmethod
+	def miss_login(cls, driver, base_config_path):
+		cls.open_page(driver, base_config_path)
+		# 通过字典方式传递cookie信息
+		contents = Utility.get_json(base_config_path)
+		driver.add_cookie({'name': 'username', 'value': contents['USERNAME']})
+		driver.add_cookie({'name': 'password', 'value': contents['PASSWORD']})
+		driver.add_cookie({'name': 'token', 'value': contents['token']})
+		driver.add_cookie({'name': 'workId', 'value': contents['workId']})
+		driver.add_cookie({'name': 'rememberMe', 'value': contents['rememberMe']})
+		time.sleep(2)
+		cls.open_page(driver, base_config_path)
+		"""
 
 		# 打开页面的方法
 		# 既依赖于应用，也依赖于webdriver
@@ -95,3 +124,7 @@ class Service:
 		driver.maximize_window()
 		return driver
 
+if __name__ == '__main__':
+	driver=Service.get_driver('..\\config\\base.conf')
+	Service.miss_login(driver,'..\\config\\base.conf')
+	driver.find_element_by_partial_link_text('学员管理').click()

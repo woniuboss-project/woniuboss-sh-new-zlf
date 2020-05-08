@@ -116,6 +116,38 @@ class Utility:
 	# 从excel中读取内容，读取结果为[{},{},{}]
 	# 传递的参数是字典，包含的键是固定值
 	@classmethod
+	def get_excel_to_dic(cls,xls_file_info):
+		# 将excel文件读取到内存中
+		workbook = xlrd.open_workbook(xls_file_info['DATAPATH'])
+		# 可以根据sheet页的下标或者名称读取sheet页中的内容.下标从0开始
+		contents = workbook.sheet_by_name(xls_file_info['SHEETNAME'])
+		# contents = workbook.sheet_by_index(0)
+		# 读取的目标是[{},{},{}]
+		# 定义列表用于存储当前sheet页中的测试信息（测试数据+预期结果）
+		test_info = []
+
+		# 按行读取每一条测试信息
+		for i in range(xls_file_info['STARTROW'],xls_file_info['ENDROW']):
+			# 读取单元格中的内容
+			data = contents.cell(i,xls_file_info['DATACOL']).value
+			# 读取期望结果列
+			expect = contents.cell(i,xls_file_info['EXPECTCOL']).value
+			# 获取的是列表
+			temp = data.split('\n')
+			d = {}
+			for t in temp:
+				# 给字典添加内容：dict[key] = value
+				if t != '':
+					d[t.split('=')[0]] = t.split('=')[1]
+			dic={'DATA':d,'expect':expect}
+			test_info.append(dic)
+		# 将结果返回
+		return test_info
+
+
+	# 从excel中读取内容，读取结果为[{},{},{}]
+	# 传递的参数是字典，包含的键是固定值
+	@classmethod
 	def get_excel_to_dict(cls,xls_file_info):
 		# 将excel文件读取到内存中
 		workbook = xlrd.open_workbook(xls_file_info['DATAPATH'])
@@ -139,11 +171,10 @@ class Utility:
 				# 给字典添加内容：dict[key] = value
 				if t != '':
 					d[t.split('=')[0]] = t.split('=')[1]
-			d['expect'] = expect
+			d['expect']:expect
 			test_info.append(d)
 		# 将结果返回
 		return test_info
-
 
 	# 从excel中读取内容，读取结果为[(),(),()]
 	@classmethod
@@ -156,7 +187,12 @@ class Utility:
 			li.append(tup)
 		return li
 
-if __name__ == '__main__':
-	test_config_info = Utility.get_json('..\\config\\cxx_testdata.conf')
-	#print(test_config_info)
-	print(Utility.get_excel_to_tuple(test_config_info[1]))
+	@classmethod
+	def get_excel_to_tup(cls,xls_file_info):
+		result = cls.get_excel_to_dic(xls_file_info)
+		li = []
+		for di in result:
+			# 通过tuple(dict.vlues())将值集转化为元组
+			tup = tuple(di.values())
+			li.append(tup)
+		return li
